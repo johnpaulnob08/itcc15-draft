@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Activities and Leadership Development - Xavier University</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <img src="xu_logo.png" alt="Xavier University Logo" class="logo-img">
+                <span class="logo-text">Student Activities<br>and Leadership Development</span>
+            </div>
+            <div class="navbar-user hidden" id="navbarUser">
+                <span class="navbar-email" id="navbarEmail"></span>
+                <button class="btn-logout" onclick="handleLogout()">Log out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page">
+        <div class="container dashboard-container">
+            <div class="header">
+                <h1><span style="font-family:Georgia,serif;font-weight:normal;">Xavier Ateneo</span> Student Organization Management System</h1>
+            </div>
+            <div class="grid-featured" id="councilGridFeatured"></div>
+            <div class="grid" id="councilGrid"></div>
+            <div class="grid-centered" id="councilGridCentered"></div>
+            <div class="spacer">
+                <button class="btn btn-primary" onclick="goToPage('auth')">Proceed to Registration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COUNCIL DETAIL (public) -->
+    <div id="councilDetail" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('dashboard')">← Back to Dashboard</button>
+            <div class="box"><h1 id="councilDetailTitle"></h1><p id="councilDetailDesc"></p></div>
+            <div class="list" id="orgListDetail"></div>
+            <div class="nav"><div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('dashboard')">← Back</button></div></div>
+        </div>
+    </div>
+
+    <!-- AUTH -->
+    <div id="auth" class="page hidden">
+        <div class="container-sm">
+            <button class="btn-back" onclick="goToPage('dashboard')">← Back</button>
+            <div class="box" style="text-align:center;">
+                <h1 id="authTitle">Create Account</h1>
+                <p id="authSubtitle">Use your XU email address to register</p>
+            </div>
+            <div class="form">
+                <div class="form-group">
+                    <label class="form-label">XU Email Address <span class="required">*</span></label>
+                    <input type="email" id="authEmail" class="form-input" placeholder="youremail@my.xu.edu.ph" autocomplete="email">
+                    <div class="field-hint">Must be an official @my.xu.edu.ph email address</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password <span class="required">*</span></label>
+                    <input type="password" id="authPassword" class="form-input" placeholder="Enter your password">
+                </div>
+                <div class="form-group" id="authConfirmGroup">
+                    <label class="form-label">Confirm Password <span class="required">*</span></label>
+                    <input type="password" id="authConfirm" class="form-input" placeholder="Re-enter your password">
+                </div>
+            </div>
+            <div id="authError" class="error-banner hidden"></div>
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('dashboard')">← Back</button></div>
+                <div class="nav-right"><button class="btn btn-primary" id="authSubmitBtn" onclick="handleAuth()">Register →</button></div>
+            </div>
+            <div class="auth-switch">
+                <span id="authSwitchText">Already have an account?</span>
+                <button class="auth-switch-btn" id="authSwitchBtn" onclick="toggleAuthMode()">Log in instead</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORG TYPE -->
+    <div id="login" class="page hidden">
+        <div class="container-sm">
+            <button class="btn-back" onclick="goToPage('dashboard')">← Back</button>
+            <div class="header" style="margin-bottom:32px;"><h1>Registration</h1><p>Select your organization type</p></div>
+            <div class="list">
+                <div class="list-item" onclick="goToPage('councilSelect')" style="cursor:pointer;">
+                    <div>
+                        <div style="font-weight:600;margin-bottom:4px;">Existing Organization</div>
+                        <div style="font-size:14px;color:#475569;font-weight:400;">Re-register your organization with updated information</div>
+                    </div>
+                    <span>›</span>
+                </div>
+                <div class="list-item" style="opacity:0.5;cursor:not-allowed;">
+                    <div>
+                        <div style="font-weight:600;margin-bottom:4px;">New Organization</div>
+                        <div style="font-size:14px;color:#94a3b8;font-weight:400;">Coming soon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COUNCIL SELECT -->
+    <div id="councilSelect" class="page hidden">
+        <div class="container-sm">
+            <button class="btn-back" onclick="goToPage('login')">← Back</button>
+            <div class="header" style="margin-bottom:32px;"><h1>Select Your Council</h1><p>Choose the council your organization belongs to</p></div>
+            <div class="list" id="councilSelectList"></div>
+        </div>
+    </div>
+
+    <!-- ORG SELECT -->
+    <div id="orgSelect" class="page hidden">
+        <div class="container-sm">
+            <button class="btn-back" onclick="goToPage('councilSelect')">← Back</button>
+            <div class="header" style="margin-bottom:32px;"><h1>Select Your Organization</h1><p id="orgSelectCouncil"></p></div>
+            <div class="list" id="orgSelectList"></div>
+        </div>
+    </div>
+
+    <!-- GUIDELINES -->
+    <div id="guidelines" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('orgSelect')">← Back</button>
+            <div class="box">
+                <div class="guidelines-header-badge">2026 Edition</div>
+                <h1>THE RE-REGISTRATION SYSTEM</h1>
+                <p>Please read all instructions below before accomplishing the requirements.</p>
+            </div>
+
+            <div class="guidelines-section">
+                <div class="guidelines-section-title">ABOUT THE SYSTEM</div>
+                <p class="guidelines-body">Every year, student organizations need to update their records with the Office of Student Affairs – Student Activities and Leadership Development (OSA-SACDEV) by accomplishing the re-registration requirements. This requirement is crucial to the status of the organization as it will be the basis for enlisting recognized student organizations who will be allowed to operate for the academic year. Only the President or the duly authorized representative of the organization is allowed to submit the requirements.</p>
+                <p class="guidelines-body" style="margin-top:16px;font-weight:600;color:#1f3a70;">The following are the benefits and privileges of recognized student organizations:</p>
+                <ul class="guidelines-list">
+                    <li>Use of the name of the university</li>
+                    <li>Use of university facilities</li>
+                    <li>Raising funds</li>
+                    <li>Sponsoring speakers and public performances</li>
+                    <li>Promotion of activities inside the university</li>
+                    <li>Support from the Student Organization Fund (SOF) or Parents-Teachers' Association (PTA) Fund</li>
+                    <li>Assistance in terms of planning and implementing projects/activities</li>
+                    <li>Interventions on conflict management and other organizational concerns</li>
+                    <li>Support from the university in regional and national assemblies and conferences</li>
+                    <li>Participation in leadership and formation programs of the university</li>
+                </ul>
+            </div>
+
+            <div class="guidelines-section">
+                <div class="guidelines-section-title">LIST OF REQUIREMENTS</div>
+                <p class="guidelines-body" style="margin-bottom:16px;">Please see instructions on how to accomplish and submit the following requirements on the succeeding sections.</p>
+                <div class="requirements-checklist">
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-1: Strategic Plan</div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-2: Org President's Profile</div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-3: Organization Officers (with Finance Information)</div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-4: Organization Members <em>(for Extra-Curricular Organizations Only)</em></div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-5.1: Moderator's Profile</div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Form B-6: Compiled Second Semester Grades of all Officers</div>
+                    <div class="req-item"><span class="req-check">&#9744;</span> Latest version of your org logo/seal</div>
+                </div>
+            </div>
+
+            <div class="guidelines-section">
+                <div class="guidelines-section-title">SPECIFIC INSTRUCTIONS</div>
+                <ol class="guidelines-ol">
+                    <li>Visit <a href="http://www.xu.edu.ph/osa" target="_blank" class="guidelines-link">www.xu.edu.ph/osa</a> and click "Org Registration".</li>
+                    <li>Fill out the forms. Please carefully follow the given instructions.</li>
+                    <li>Upload the following files:
+                        <ul class="guidelines-sub-list">
+                            <li>Current edition of org constitution</li>
+                            <li>Current org logo/seal</li>
+                        </ul>
+                    </li>
+                    <li>For Form B-5.1 Moderator's Profile, please send it to your moderator. Ask your moderator to accomplish the form and send it back to you. You will be the one to submit it online.</li>
+                    <li>As much as possible, gather all the required documents first before attempting to access the re-registration form and submit all requirements together.</li>
+                    <li>Submit accomplished forms through <a href="http://www.xu.edu.ph/osa" target="_blank" class="guidelines-link">www.xu.edu.ph/osa</a>. Click the "Org Registration" tab. <strong>Please upload all accomplished forms through the portal. Do not send them via email.</strong> Be sure to <strong>affix e-signatures</strong> of the required signatories before uploading. No need to submit printed copies.</li>
+                    <li>For grade requirement, please gather screenshots of the 2nd semester grades of ALL OFFICERS as listed on Form B-3. Compile the screenshots in one word/PDF file (short size) before submitting online.</li>
+                    <li>Please rename files according to the following format:
+                        <ul class="guidelines-sub-list">
+                            <li>ORG ACRONYM_Constitution</li>
+                            <li>ORG ACRONYM_Logo</li>
+                        </ul>
+                    </li>
+                    <li>Submit all requirements on or before <strong>30 AUGUST 2026.</strong></li>
+                    <li>OSA-SACDEV will evaluate your re-registration requirements before the granting of recognition. Only those included in the list of recognized organizations shall be allowed to operate this school year.</li>
+                </ol>
+            </div>
+
+            <div class="guidelines-section">
+                <div class="guidelines-section-title">ORGANIZATION MODERATOR</div>
+                <p class="guidelines-body">Moderators play a very important role in student organizations since they help you plan, monitor, implement and evaluate your projects. They also play vital role in helping you address various organizational concerns and attain your success. It is important that you consider the personal expertise of your moderator and establish a relationship that is built on trust and support.</p>
+                <p class="guidelines-body" style="margin-top:16px;font-weight:600;color:#1f3a70;">Duties and responsibilities of moderators:</p>
+                <ul class="guidelines-list">
+                    <li>Provide assistance to students in planning, monitoring, implementing and evaluating projects</li>
+                    <li>Advance participation in student activities and encourage students to deliver their duties and responsibilities</li>
+                    <li>Assist in coordinating inter-organization projects and activities or coordinating with other offices</li>
+                    <li>Promote alliance-building with other organizations</li>
+                    <li>Act as liaison officer between the organization and the administration through OSA-SACDEV</li>
+                    <li>Attend meetings and other organization activities when necessary</li>
+                    <li>Countersign all written reports and communications of the organization</li>
+                    <li>Help promote leadership and social awareness</li>
+                    <li>Help enhance academic discipline</li>
+                    <li>Motivate students to be competent men and women for others</li>
+                </ul>
+                <div class="guidelines-subsection">
+                    <h4>Modification During the Hybrid Learning Mode</h4>
+                    <ol class="guidelines-ol" style="margin-top:8px;">
+                        <li>Student orgs may either retain their moderator from last year or nominate another. For the latter, the student org may submit only one nominee who will be deliberated upon by OSA-SACDEV.</li>
+                        <li>Basic qualifications for moderator:
+                            <ul class="guidelines-sub-list">
+                                <li>College councils – any full-time faculty or staff member from your college</li>
+                                <li>Co-curricular organizations – any full-time faculty member from your own department</li>
+                                <li>Extra-curricular organizations – any full-time faculty, formator or staff member from the university</li>
+                                <li>Not a moderator of any other organization</li>
+                            </ul>
+                        </li>
+                        <li>Please consider the skills, knowledge and expertise of your nominee. It is important that they are supportive or have background aligned with the nature, scope, field, cause or advocacy of your organization.</li>
+                    </ol>
+                </div>
+                <div class="guidelines-contact">
+                    <strong>For inquiries or concerns about the re-registration:</strong><br>
+                    Please e-mail to <a href="mailto:sacdev@xu.edu.ph" class="guidelines-link">sacdev@xu.edu.ph</a>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgSelect')">← Back</button></div>
+                <div class="nav-right"><button class="btn btn-primary" onclick="proceedWithConfirm()">I Have Read the Guidelines &#8594;</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORG INFO / WELCOME -->
+    <div id="orgInfo" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('guidelines')">← Back</button>
+
+            <div class="welcome-banner">
+                <div class="welcome-banner-title">Welcome to the Org Registration 2026 Portal!</div>
+                <p>Every year, student organizations need to update their records with the Office of Student Affairs – Student Activities and Leadership Development by accomplishing the re-registration requirements. This requirement is crucial to the status of the organization as it will be the basis for enlisting recognized student organizations who will be allowed to operate for the academic year. Only the President or the duly authorized representative of the organization is allowed to process the requirements.</p>
+                <p style="margin-top:12px;font-weight:600;">The following are the benefits and privileges of recognized student organizations:</p>
+                <ul class="welcome-list">
+                    <li>Use of the name of the university</li>
+                    <li>Use of university facilities</li>
+                    <li>Raising funds</li>
+                    <li>Sponsoring speakers and public performances</li>
+                    <li>Promotion of activities inside the university</li>
+                    <li>Support from the Student Organization Fund (SOF) or Parents-Teachers' Association (PTA) Fund</li>
+                    <li>Assistance in terms of planning and implementing projects/activities</li>
+                    <li>Interventions on conflict management and other organizational concerns</li>
+                    <li>Support from the university in regional and national assemblies and conferences</li>
+                    <li>Participation in leadership and formation programs of the university</li>
+                </ul>
+                <p style="margin-top:16px;">By logging on to this site, it means that you are now ready to submit your requirements for org re-registration/application. Please be sure to have the complete requirements before proceeding.</p>
+            </div>
+
+            <div class="box">
+                <h1>Organization Information</h1>
+                <p>Please provide the following details before proceeding to the Strategic Plan</p>
+            </div>
+
+            <div class="form" id="orgInfoForm">
+                <div class="form-group">
+                    <label class="form-label">Org Cluster <span class="required">*</span></label>
+                    <select id="infoCluster" class="form-select">
+                        <option value="">Select a cluster</option>
+                        <option value="Business Environment">Business Environment</option>
+                        <option value="Faith Formation">Faith Formation</option>
+                        <option value="Food and Agriculture">Food and Agriculture</option>
+                        <option value="Governance and Policy Making">Governance and Policy Making</option>
+                        <option value="Media and Arts">Media and Arts</option>
+                        <option value="Natural Sciences, Engineering and Technology">Natural Sciences, Engineering and Technology</option>
+                        <option value="Program-Based Professional Organization">Program-Based Professional Organization</option>
+                        <option value="Service-Learning">Service-Learning</option>
+                        <option value="Socio-Cultural">Socio-Cultural</option>
+                        <option value="Sports and Recreation">Sports and Recreation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">President's Full Name <span class="required">*</span></label>
+                    <input type="text" id="infoPresidentName" class="form-input" placeholder="Last Name, First Name, M.I.">
+                    <div class="field-hint">Format: Last Name, First Name, M.I. (e.g. dela Cruz, Juan, A.)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">President's Mobile Number <span class="required">*</span></label>
+                    <input type="tel" id="infoPresidentMobile" class="form-input" placeholder="e.g. 09XXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">President's Email Address <span class="required">*</span></label>
+                    <input type="email" id="infoPresidentEmail" class="form-input" placeholder="Enter president's email address">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label">Name of Moderator-Nominee <span class="required">*</span></label>
+                    <input type="text" id="infoModeratorName" class="form-input" placeholder="Enter moderator-nominee's full name">
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('guidelines')">← Back</button></div>
+                <div class="nav-right"><button class="btn btn-primary" onclick="submitOrgInfo()">Next: Strategic Plan &#8594;</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STRATEGIC PLAN -->
+    <div id="strategicPlan" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('orgInfo')">← Back</button>
+
+            <div class="box">
+                <div class="form-badge">Form B-1</div>
+                <h1>Strategic Plan</h1>
+                <p id="stratPlanSubtitle">Please fill in all sections below for the academic year 2026.</p>
+            </div>
+
+            <div class="guidelines-section" style="margin-bottom:32px;">
+                <div class="guidelines-section-title">A. INTRODUCTION</div>
+                <blockquote class="strat-quote">
+                    "Strategic planning is an organizational management activity that is used to set priorities, focus energy and resources, strengthen operations, ensure that employees and other stakeholders are working toward common goals, establish agreement around intended outcomes/results, and assess and adjust the organization's direction in response to a changing environment. It is a disciplined effort that produces fundamental decisions and actions that shape and guide what an organization is, who it serves, what it does, and why it does it, with a focus on the future."
+                    <cite>— Balanced Scorecard Institute</cite>
+                </blockquote>
+                <p class="guidelines-body" style="margin-top:12px;">Please fill out this form by listing down all projects and other initiatives that your organization plans to do during the academic year. Your projects/initiatives must be organized according to three areas: <strong>Organizational Development</strong>, <strong>Student Services</strong>, and <strong>Community Involvement</strong>.</p>
+            </div>
+
+            <div class="form strat-org-header">
+                <div class="strat-org-row">
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">ORG ACRONYM</label>
+                        <input type="text" id="stratAcronym" class="form-input" placeholder="e.g. XAFS">
+                    </div>
+                    <div class="form-group" style="flex:2;margin-bottom:0;">
+                        <label class="form-label">Complete Name of Organization</label>
+                        <input type="text" id="stratOrgFullName" class="form-input" placeholder="Enter full organization name">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:24px;margin-bottom:16px;">
+                    <label class="form-label">Mission Statement</label>
+                    <textarea id="stratMission" class="form-textarea" placeholder="Enter your organization's mission statement"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label">Vision Statement</label>
+                    <textarea id="stratVision" class="form-textarea" placeholder="Enter your organization's vision statement"></textarea>
+                </div>
+            </div>
+
+            <!-- B: Org Dev -->
+            <div class="strat-section">
+                <div class="strat-section-header">
+                    <div class="strat-section-label">B</div>
+                    <div>
+                        <div class="strat-section-title">ORGANIZATIONAL DEVELOPMENT</div>
+                        <div class="strat-section-desc">List planned projects and initiatives aligned with increasing your organization's effectiveness and viability — strategic planning, evaluation, organizational reflection, system improvement, and self-analysis.</div>
+                    </div>
+                </div>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:90px;">Target Date</th>
+                                <th style="min-width:140px;">Name of Project / Initiative</th>
+                                <th style="min-width:150px;">Objectives <span class="th-hint">(SMART)</span></th>
+                                <th style="min-width:140px;">Target Participants / Beneficiaries</th>
+                                <th style="min-width:130px;">Identified Partners / Stakeholders</th>
+                                <th style="min-width:140px;">Project Deliverables / Success Indicators</th>
+                                <th style="min-width:120px;">Project Head / Implementing Body</th>
+                                <th style="min-width:100px;">Budget Allotted</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyOrgDev"></tbody>
+                        <tfoot>
+                            <tr class="strat-total-row">
+                                <td colspan="7" class="strat-total-label">Total Budget (Organizational Development)</td>
+                                <td><input type="text" id="totalOrgDev" class="strat-total-input" placeholder="Php 0.00" readonly></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addRow('bodyOrgDev','totalOrgDev')">+ Add Row</button>
+            </div>
+
+            <!-- C: Student Services -->
+            <div class="strat-section">
+                <div class="strat-section-header">
+                    <div class="strat-section-label">C</div>
+                    <div>
+                        <div class="strat-section-title">STUDENT SERVICES</div>
+                        <div class="strat-section-desc">Enumerate planned programs/projects involving strategic approaches in managing your volunteers/members — recruitment, retention, skills development, and utilization of member abilities aligned with the organization's objectives.</div>
+                    </div>
+                </div>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:90px;">Target Date</th>
+                                <th style="min-width:140px;">Name of Project / Initiative</th>
+                                <th style="min-width:150px;">Objectives <span class="th-hint">(SMART)</span></th>
+                                <th style="min-width:140px;">Target Participants / Beneficiaries</th>
+                                <th style="min-width:130px;">Identified Partners / Stakeholders</th>
+                                <th style="min-width:140px;">Project Deliverables / Success Indicators</th>
+                                <th style="min-width:120px;">Project Head / Implementing Body</th>
+                                <th style="min-width:100px;">Budget Allotted</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyStudServ"></tbody>
+                        <tfoot>
+                            <tr class="strat-total-row">
+                                <td colspan="7" class="strat-total-label">Total Budget (Student Services)</td>
+                                <td><input type="text" id="totalStudServ" class="strat-total-input" placeholder="Php 0.00" readonly></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addRow('bodyStudServ','totalStudServ')">+ Add Row</button>
+            </div>
+
+            <!-- D: Community Involvement -->
+            <div class="strat-section">
+                <div class="strat-section-header">
+                    <div class="strat-section-label">D</div>
+                    <div>
+                        <div class="strat-section-title">COMMUNITY INVOLVEMENT</div>
+                        <div class="strat-section-desc">Specify planned projects/programs that fulfil responsibility to the university and the community outside it. Projects must benefit people outside Xavier University, be related to the org's discipline/advocacy, and must not be given as "dole out" support.</div>
+                    </div>
+                </div>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:90px;">Target Date</th>
+                                <th style="min-width:140px;">Name of Project / Initiative</th>
+                                <th style="min-width:150px;">Objectives <span class="th-hint">(SMART)</span></th>
+                                <th style="min-width:140px;">Target Participants / Beneficiaries</th>
+                                <th style="min-width:130px;">Identified Partners / Stakeholders</th>
+                                <th style="min-width:140px;">Project Deliverables / Success Indicators</th>
+                                <th style="min-width:120px;">Project Head / Implementing Body</th>
+                                <th style="min-width:100px;">Budget Allotted</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyCommInv"></tbody>
+                        <tfoot>
+                            <tr class="strat-total-row">
+                                <td colspan="7" class="strat-total-label">Total Budget (Community Involvement)</td>
+                                <td><input type="text" id="totalCommInv" class="strat-total-input" placeholder="Php 0.00" readonly></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addRow('bodyCommInv','totalCommInv')">+ Add Row</button>
+            </div>
+
+            <!-- Budget Summary -->
+            <div class="strat-section">
+                <div class="strat-section-header" style="margin-bottom:16px;">
+                    <div class="strat-section-label" style="background:#475569;">&#931;</div>
+                    <div class="strat-section-title">BUDGET BREAKDOWN AND SUMMARY</div>
+                </div>
+                <div class="budget-summary-grid">
+                    <div class="budget-summary-left">
+                        <table class="budget-table">
+                            <thead><tr><th>Budget Summary</th><th>Amount (Php)</th></tr></thead>
+                            <tbody>
+                                <tr><td>A. Organizational Development</td><td><input type="text" id="budgetOrgDev" class="form-input" placeholder="0.00" readonly style="background:#f8fafc;cursor:default;"></td></tr>
+                                <tr><td>B. Student Services</td><td><input type="text" id="budgetStudServ" class="form-input" placeholder="0.00" readonly style="background:#f8fafc;cursor:default;"></td></tr>
+                                <tr><td>C. Community Involvement</td><td><input type="text" id="budgetCommInv" class="form-input" placeholder="0.00" readonly style="background:#f8fafc;cursor:default;"></td></tr>
+                                <tr class="budget-total-row"><td><strong>Overall Total</strong></td><td><input type="text" id="budgetTotal" class="form-input" placeholder="0.00" readonly style="font-weight:700;"></td></tr>
+                            </tbody>
+                        </table>
+                        <div style="font-size:12px;color:#64748b;margin-top:8px;font-style:italic;">* Amounts are automatically computed from your project tables above.</div>
+                    </div>
+                    <div class="budget-summary-right">
+                        <table class="budget-table">
+                            <thead><tr><th>Sources of Funds</th><th>Amount (Php)</th></tr></thead>
+                            <tbody>
+                                <tr><td>Student Org Funds / AECO Fund (Finance Office)</td><td><input type="number" id="fundSOF" class="form-input" placeholder="0.00" min="0" oninput="calcFundTotal()"></td></tr>
+                                <tr><td>PTA</td><td><input type="number" id="fundPTA" class="form-input" placeholder="0.00" min="0" oninput="calcFundTotal()"></td></tr>
+                                <tr><td>Membership Fee</td><td><input type="number" id="fundMembership" class="form-input" placeholder="0.00" min="0" oninput="calcFundTotal()"></td></tr>
+                                <tr><td>Raised Funds</td><td><input type="number" id="fundRaised" class="form-input" placeholder="0.00" min="0" oninput="calcFundTotal()"></td></tr>
+                                <tr class="budget-total-row"><td><strong>Total Funds</strong></td><td><input type="text" id="fundTotal" class="form-input" placeholder="0.00" readonly style="font-weight:700;"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signatories -->
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgInfo')">← Back</button></div>
+                <div class="nav-right"><button class="btn btn-primary" onclick="submitStratPlan()">Save &amp; Next &#8594;</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESIDENT'S PROFILE (Form B-2) -->
+    <div id="presidentProfile" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('strategicPlan')">← Back</button>
+            <div class="box">
+                <div class="form-badge">Form B-2</div>
+                <h1>President's Profile</h1>
+                <p>Please provide the complete profile information of the organization president.</p>
+            </div>
+
+            <!-- Photo ID Upload -->
+            <div class="form" style="margin-bottom:24px;">
+                <div class="form-group">
+                    <label class="form-label">Photo ID <span class="required">*</span></label>
+                    <div class="upload-box" id="presPhotoBox" onclick="document.getElementById('presPhotoInput').click()">
+                        <img id="presPhotoPreview" src="" alt="" class="upload-preview hidden">
+                        <div id="presPhotoPlaceholder" class="upload-placeholder">
+                            <div class="upload-icon">&#128247;</div>
+                            <div>Click to upload photo ID</div>
+                            <div class="upload-hint">JPG, PNG accepted</div>
+                        </div>
+                    </div>
+                    <input type="file" id="presPhotoInput" accept="image/*" class="hidden" onchange="handleImageUpload('presPhotoInput','presPhotoPreview','presPhotoPlaceholder')">
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">PERSONAL INFORMATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Full Name <span class="required">*</span></label>
+                            <input type="text" id="presFullName" class="form-input" placeholder="Last Name, First Name, M.I.">
+                            <div class="field-hint">Format: Last Name, First Name, M.I.</div>
+                        </div>
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Course and Year <span class="required">*</span></label>
+                            <input type="text" id="presCourseYear" class="form-input" placeholder="e.g. BS Computer Science, 3rd Year">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Birthday (dd/mm/yyyy)</label>
+                            <input type="text" id="presBirthday" class="form-input" placeholder="dd/mm/yyyy">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Age</label>
+                            <input type="number" id="presAge" class="form-input" placeholder="Age">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Sex</label>
+                            <select id="presSex" class="form-select">
+                                <option value="">Select</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Religion</label>
+                            <input type="text" id="presReligion" class="form-input" placeholder="Religion">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">CONTACT INFORMATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="presMobile" class="form-input" placeholder="09XXXXXXXXX">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">City Landline</label>
+                            <input type="text" id="presLandlineCity" class="form-input" placeholder="City landline">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">E-mail <span class="required">*</span></label>
+                            <input type="email" id="presEmail" class="form-input" placeholder="Email address">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">ID Number</label>
+                            <input type="text" id="presIdNumber" class="form-input" placeholder="Student ID No.">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Provincial Landline</label>
+                            <input type="text" id="presLandlineProv" class="form-input" placeholder="Provincial landline">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Facebook Account Name (URL)</label>
+                            <input type="text" id="presFacebook" class="form-input" placeholder="Facebook URL or name">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:16px;">
+                        <label class="form-label">Complete Home Address</label>
+                        <input type="text" id="presHomeAddress" class="form-input" placeholder="Complete home/provincial address">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Complete City Address</label>
+                        <input type="text" id="presCityAddress" class="form-input" placeholder="Complete city/current address">
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">FAMILY INFORMATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Father's Name</label>
+                            <input type="text" id="presFatherName" class="form-input" placeholder="Father's full name">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Occupation</label>
+                            <input type="text" id="presFatherOccupation" class="form-input" placeholder="Occupation">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="presFatherMobile" class="form-input" placeholder="Mobile">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Mother's Name</label>
+                            <input type="text" id="presMotherName" class="form-input" placeholder="Mother's full name">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Occupation</label>
+                            <input type="text" id="presMotherOccupation" class="form-input" placeholder="Occupation">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="presMotherMobile" class="form-input" placeholder="Mobile">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Guardian's Name <span class="field-hint-inline">(if not living with parents)</span></label>
+                            <input type="text" id="presGuardianName" class="form-input" placeholder="Guardian's full name">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Relationship</label>
+                            <input type="text" id="presGuardianRelation" class="form-input" placeholder="N/A if not applicable">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="presGuardianMobile" class="form-input" placeholder="Mobile">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:16px;margin-bottom:0;">
+                        <label class="form-label">Number of Siblings</label>
+                        <input type="number" id="presSiblings" class="form-input" style="max-width:180px;" placeholder="0" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">EDUCATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Name of High School</label>
+                            <input type="text" id="presHsName" class="form-input" placeholder="High school name">
+                        </div>
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Address</label>
+                            <input type="text" id="presHsAddress" class="form-input" placeholder="Address">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Year Graduated</label>
+                            <input type="text" id="presHsGrad" class="form-input" placeholder="Year">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Name of Grade School</label>
+                            <input type="text" id="presGsName" class="form-input" placeholder="Grade school name">
+                        </div>
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Address</label>
+                            <input type="text" id="presGsAddress" class="form-input" placeholder="Address">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Year Graduated</label>
+                            <input type="text" id="presGsGrad" class="form-input" placeholder="Year">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Scholarship Currently Enjoyed (if any)</label>
+                            <input type="text" id="presScholarship" class="form-input" placeholder="Scholarship name">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Year Granted</label>
+                            <input type="text" id="presScholarshipYear" class="form-input" placeholder="Year">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">LEADERSHIP INVOLVEMENT</div>
+                <p class="guidelines-body" style="margin-bottom:12px;">Please enumerate a maximum of 4 most significant leadership involvements.</p>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th>Name of Organization</th>
+                                <th>Position</th>
+                                <th>Address of Organization</th>
+                                <th style="min-width:100px;">Inclusive Years</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="presLeadershipBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addLeadershipRow('presLeadershipBody')">+ Add Row</button>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">AWARDS AND RECOGNITION</div>
+                <p class="guidelines-body" style="margin-bottom:12px;">Please list significant awards and recognition. Do not include pageant-based awards.</p>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th>Name of Award</th>
+                                <th>Description of Award</th>
+                                <th>Conferring Organization / Institution</th>
+                                <th style="min-width:100px;">Date Received</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="presAwardsBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addAwardsRow('presAwardsBody')">+ Add Row</button>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">SKILLS AND INTERESTS</div>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Skills, Hobbies and Interests</label>
+                        <textarea id="presSkills" class="form-textarea" placeholder="State your skills, hobbies and interests. For computer literacy, please specify the application(s) you frequently use."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">CERTIFICATION &amp; E-SIGNATURE</div>
+                <p class="guidelines-body" style="margin-bottom:16px;">By submitting this form, I certify that the information contained herein is true and correct.</p>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">President's E-Signature <span class="required">*</span></label>
+                        <div class="upload-box upload-box-sig" id="presSignatureBox" onclick="document.getElementById('presSignatureInput').click()">
+                            <img id="presSignaturePreview" src="" alt="" class="upload-preview hidden">
+                            <div id="presSignaturePlaceholder" class="upload-placeholder">
+                                <div class="upload-icon">&#9998;</div>
+                                <div>Click to upload e-signature image</div>
+                                <div class="upload-hint">JPG, PNG accepted</div>
+                            </div>
+                        </div>
+                        <input type="file" id="presSignatureInput" accept="image/*" class="hidden" onchange="handleImageUpload('presSignatureInput','presSignaturePreview','presSignaturePlaceholder')">
+                        <div class="field-hint">Upload an image of the president's signature.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('strategicPlan')">← Back</button></div>
+                <div class="nav-right">
+                    <button class="btn btn-secondary" onclick="saveFormData('presidentProfile')" style="margin-right:10px;">&#128190; Save Progress</button>
+                    <button class="btn btn-primary" onclick="submitAndNext('presidentProfile','orgOfficers')">Save &amp; Next &#8594;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIZATION OFFICERS (Form B-3) -->
+    <div id="orgOfficers" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('presidentProfile')">← Back</button>
+            <div class="box">
+                <div class="form-badge">Form B-3</div>
+                <h1>Organization Officers</h1>
+                <p>Please enumerate all officers of the organization including executive, legislative, departments, and special committees.</p>
+            </div>
+
+            <div class="form" style="margin-bottom:24px;">
+                <div class="strat-org-row" style="gap:16px;">
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Type of Organization</label>
+                        <select id="officersOrgType" class="form-select">
+                            <option value="">Select type</option>
+                            <option>Council</option>
+                            <option>Co-curricular</option>
+                            <option>Extra-curricular</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Cluster</label>
+                        <select id="officersCluster" class="form-select">
+                            <option value="">Select a cluster</option>
+                            <option value="Business Environment">Business Environment</option>
+                            <option value="Faith Formation">Faith Formation</option>
+                            <option value="Food and Agriculture">Food and Agriculture</option>
+                            <option value="Governance and Policy Making">Governance and Policy Making</option>
+                            <option value="Media and Arts">Media and Arts</option>
+                            <option value="Natural Sciences, Engineering and Technology">Natural Sciences, Engineering and Technology</option>
+                            <option value="Program-Based Professional Organization">Program-Based Professional Organization</option>
+                            <option value="Service-Learning">Service-Learning</option>
+                            <option value="Socio-Cultural">Socio-Cultural</option>
+                            <option value="Sports and Recreation">Sports and Recreation</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Year Established <span class="field-hint-inline">(if known)</span></label>
+                        <input type="text" id="officersYearEstablished" class="form-input" placeholder="e.g. 2005">
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">LIST OF OFFICERS</div>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:120px;">Position</th>
+                                <th style="min-width:180px;">Name of Officer <span class="th-hint">(Last Name, First Name, MI)</span></th>
+                                <th style="min-width:140px;">Course and Year</th>
+                                <th style="min-width:80px;">Latest QPI</th>
+                                <th style="min-width:120px;">Mobile Number</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="officersTableBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addOfficerRow()">+ Add Officer</button>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('presidentProfile')">← Back</button></div>
+                <div class="nav-right">
+                    <button class="btn btn-secondary" onclick="saveFormData('orgOfficers')" style="margin-right:10px;">&#128190; Save Progress</button>
+                    <button class="btn btn-primary" onclick="submitAndNext('orgOfficers','orgMembers')">Save &amp; Next &#8594;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIZATION MEMBERS (Form B-4) -->
+    <div id="orgMembers" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('orgOfficers')">← Back</button>
+            <div class="box">
+                <div class="form-badge">Form B-4</div>
+                <h1>Organization Members</h1>
+                <p>Applicable to Extra-Curricular Organizations only. Please enumerate all members of the organization.</p>
+            </div>
+
+            <div class="form" style="margin-bottom:24px;">
+                <div class="strat-org-row" style="gap:16px;">
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Type of Organization</label>
+                        <select id="membersOrgType" class="form-select">
+                            <option value="">Select type</option>
+                            <option>Council</option>
+                            <option>Co-curricular</option>
+                            <option>Extra-curricular</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Cluster</label>
+                        <select id="membersCluster" class="form-select">
+                            <option value="">Select a cluster</option>
+                            <option value="Business Environment">Business Environment</option>
+                            <option value="Faith Formation">Faith Formation</option>
+                            <option value="Food and Agriculture">Food and Agriculture</option>
+                            <option value="Governance and Policy Making">Governance and Policy Making</option>
+                            <option value="Media and Arts">Media and Arts</option>
+                            <option value="Natural Sciences, Engineering and Technology">Natural Sciences, Engineering and Technology</option>
+                            <option value="Program-Based Professional Organization">Program-Based Professional Organization</option>
+                            <option value="Service-Learning">Service-Learning</option>
+                            <option value="Socio-Cultural">Socio-Cultural</option>
+                            <option value="Sports and Recreation">Sports and Recreation</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;margin-bottom:0;">
+                        <label class="form-label">Year Established <span class="field-hint-inline">(if known)</span></label>
+                        <input type="text" id="membersYearEstablished" class="form-input" placeholder="e.g. 2005">
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">LIST OF MEMBERS</div>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:180px;">Full Name <span class="th-hint">(Last Name, First Name, MI)</span></th>
+                                <th style="min-width:140px;">Course and Year</th>
+                                <th style="min-width:80px;">Latest QPI</th>
+                                <th style="min-width:120px;">Mobile Number</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addMemberRow()">+ Add Member</button>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgOfficers')">← Back</button></div>
+                <div class="nav-right">
+                    <button class="btn btn-secondary" onclick="saveFormData('orgMembers')" style="margin-right:10px;">&#128190; Save Progress</button>
+                    <button class="btn btn-primary" onclick="submitAndNext('orgMembers','moderatorProfile')">Save &amp; Next &#8594;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODERATOR PROFILE (Form B-5.1) -->
+    <div id="moderatorProfile" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('orgMembers')">← Back</button>
+            <div class="box">
+                <div class="form-badge">Form B-5.1</div>
+                <h1>Moderator Nominee's Profile</h1>
+                <p>Please ask your moderator-nominee to accomplish this form and send it back to you for submission.</p>
+            </div>
+
+            <div class="guidelines-section" style="background:#fffbeb;border-left:4px solid #d4af37;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
+                <p class="guidelines-body" style="font-weight:600;color:#1f3a70;margin-bottom:8px;">&#9888; Instruction for the Moderator-Nominee:</p>
+                <p class="guidelines-body">Every start of the academic year, student organizations are required to accomplish re-registration requirements which include moderator nomination forms and profile forms. Please be advised that a student organization has chosen you as their nominee. Please accomplish this form accurately and return it to your nominating organization for submission.</p>
+            </div>
+
+            <!-- Photo ID Upload -->
+            <div class="form" style="margin-bottom:24px;">
+                <div class="form-group">
+                    <label class="form-label">Photo ID <span class="required">*</span></label>
+                    <div class="upload-box" id="modPhotoBox" onclick="document.getElementById('modPhotoInput').click()">
+                        <img id="modPhotoPreview" src="" alt="" class="upload-preview hidden">
+                        <div id="modPhotoPlaceholder" class="upload-placeholder">
+                            <div class="upload-icon">&#128247;</div>
+                            <div>Click to upload photo ID</div>
+                            <div class="upload-hint">JPG, PNG accepted</div>
+                        </div>
+                    </div>
+                    <input type="file" id="modPhotoInput" accept="image/*" class="hidden" onchange="handleImageUpload('modPhotoInput','modPhotoPreview','modPhotoPlaceholder')">
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">PERSONAL INFORMATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Full Name <span class="required">*</span></label>
+                            <input type="text" id="modFullName" class="form-input" placeholder="Last Name, First Name, M.I.">
+                        </div>
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Nominating Organization <span class="required">*</span></label>
+                            <input type="text" id="modNominatingOrg" class="form-input" placeholder="Complete name of nominating organization">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Birthday (dd/mm/yyyy)</label>
+                            <input type="text" id="modBirthday" class="form-input" placeholder="dd/mm/yyyy">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Age</label>
+                            <input type="number" id="modAge" class="form-input" placeholder="Age">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Sex</label>
+                            <select id="modSex" class="form-select">
+                                <option value="">Select</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Religion</label>
+                            <input type="text" id="modReligion" class="form-input" placeholder="Religion">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">EMPLOYMENT</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Official University Designation <span class="required">*</span></label>
+                            <input type="text" id="modDesignation" class="form-input" placeholder="e.g. Instructor, Assistant Professor">
+                        </div>
+                        <div class="form-group" style="flex:2;margin-bottom:0;">
+                            <label class="form-label">Unit / College / Department <span class="required">*</span></label>
+                            <input type="text" id="modDepartment" class="form-input" placeholder="e.g. College of Engineering">
+                        </div>
+                    </div>
+                    <div class="strat-org-row" style="gap:16px;margin-top:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Status</label>
+                            <select id="modStatus" class="form-select">
+                                <option value="">Select status</option>
+                                <option>Full-time</option>
+                                <option>Part-time</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Years of Service in the University</label>
+                            <input type="text" id="modYearsService" class="form-input" placeholder="e.g. 5 years">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">CONTACT INFORMATION</div>
+                <div class="form">
+                    <div class="strat-org-row" style="gap:16px;">
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="modMobile" class="form-input" placeholder="Mobile number">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Email <span class="required">*</span></label>
+                            <input type="email" id="modEmail" class="form-input" placeholder="Email address">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Landline</label>
+                            <input type="text" id="modLandline" class="form-input" placeholder="Landline number">
+                        </div>
+                        <div class="form-group" style="flex:1;margin-bottom:0;">
+                            <label class="form-label">Facebook Account Name / URL</label>
+                            <input type="text" id="modFacebook" class="form-input" placeholder="Facebook URL or name">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:16px;margin-bottom:0;">
+                        <label class="form-label">Complete City Address</label>
+                        <input type="text" id="modCityAddress" class="form-input" placeholder="Complete city address">
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">LEADERSHIP INVOLVEMENT</div>
+                <p class="guidelines-body" style="margin-bottom:12px;">Please enumerate a maximum of 4 most significant leadership involvements inside and/or outside Xavier University.</p>
+                <div class="strat-table-wrapper">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th>Name of Organization</th>
+                                <th>Position</th>
+                                <th>Address of Organization</th>
+                                <th style="min-width:100px;">Inclusive Years</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="modLeadershipBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn-add-row" onclick="addLeadershipRow('modLeadershipBody')">+ Add Row</button>
+
+                <div class="strat-table-wrapper" style="margin-top:24px;">
+                    <table class="strat-table">
+                        <thead>
+                            <tr>
+                                <th>Been a Moderator Before?</th>
+                                <th>If yes, name of organization</th>
+                                <th>Moderator of nominating org?</th>
+                                <th>If yes, for how many years?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select id="modWasModBefore" class="strat-cell-input" style="width:100%;">
+                                        <option value="">Select</option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" id="modPrevOrgName" class="strat-cell-input" placeholder="Organization name"></td>
+                                <td>
+                                    <select id="modIsModOfNominating" class="strat-cell-input" style="width:100%;">
+                                        <option value="">Select</option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" id="modYearsAsModNominating" class="strat-cell-input" placeholder="Number of years"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form" style="margin-top:20px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Special Skills or Interests Related to the Organization's Nature, Scope, Cause or Advocacy</label>
+                        <textarea id="modSpecialSkills" class="form-textarea" placeholder="Please state any information which may be helpful in assessing your possible contribution to the organization. This may include but is not limited to your field of expertise, your affiliation outside the University, etc."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">MODERATOR'S E-SIGNATURE</div>
+                <p class="guidelines-body" style="margin-bottom:16px;">Please upload the moderator-nominee's e-signature below.</p>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Moderator's E-Signature <span class="required">*</span></label>
+                        <div class="upload-box upload-box-sig" id="modSignatureBox" onclick="document.getElementById('modSignatureInput').click()">
+                            <img id="modSignaturePreview" src="" alt="" class="upload-preview hidden">
+                            <div id="modSignaturePlaceholder" class="upload-placeholder">
+                                <div class="upload-icon">&#9998;</div>
+                                <div>Click to upload e-signature image</div>
+                                <div class="upload-hint">JPG, PNG accepted</div>
+                            </div>
+                        </div>
+                        <input type="file" id="modSignatureInput" accept="image/*" class="hidden" onchange="handleImageUpload('modSignatureInput','modSignaturePreview','modSignaturePlaceholder')">
+                        <div class="field-hint">Upload an image of the moderator-nominee's signature.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgMembers')">← Back</button></div>
+                <div class="nav-right">
+                    <button class="btn btn-secondary" onclick="saveFormData('moderatorProfile')" style="margin-right:10px;">&#128190; Save Progress</button>
+                    <button class="btn btn-primary" onclick="submitAndNext('moderatorProfile','gradeAndDocs')">Save &amp; Next &#8594;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRADE SLIPS + CONSTITUTION + LOGO (Combined Form) -->
+    <div id="gradeAndDocs" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('moderatorProfile')">← Back</button>
+            <div class="box">
+                <div class="form-badge">Form B-6 &amp; Documents</div>
+                <h1>Grade Slips, Constitution &amp; Organization Logo</h1>
+                <p>Upload all remaining required documents to complete your re-registration.</p>
+            </div>
+
+            <!-- Grade Slips instructions -->
+            <div class="guidelines-section" style="background:#f0f4ff;border-left:4px solid #1f3a70;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
+                <div class="guidelines-section-title" style="margin-bottom:8px;">&#128221; Instructions: Grade Slips (Form B-6)</div>
+                <ol class="guidelines-ol">
+                    <li>Gather screenshots of the <strong>2nd semester grades</strong> of <strong>ALL OFFICERS</strong> as listed on Form B-3.</li>
+                    <li>Compile all screenshots in <strong>one Word or PDF file</strong> (short/letter size).</li>
+                    <li>Rename the file as: <strong>ORG ACRONYM_GradeSlips_2025</strong></li>
+                    <li>Upload the compiled file below.</li>
+                </ol>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">GRADE SLIPS UPLOAD (Form B-6)</div>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Compiled 2nd Semester Grade Slips of All Officers <span class="required">*</span></label>
+                        <div class="upload-box upload-box-file" id="gradeSlipsBox" onclick="document.getElementById('gradeSlipsInput').click()">
+                            <div id="gradeSlipsPlaceholder" class="upload-placeholder">
+                                <div class="upload-icon">&#128196;</div>
+                                <div id="gradeSlipsFileName">Click to upload compiled grade slips</div>
+                                <div class="upload-hint">PDF or Word document accepted (max 10MB)</div>
+                            </div>
+                        </div>
+                        <input type="file" id="gradeSlipsInput" accept=".pdf,.doc,.docx" class="hidden" onchange="handleFileUpload('gradeSlipsInput','gradeSlipsFileName','gradeSlipsBox')">
+                        <div class="field-hint">File format: <strong>ORG ACRONYM_GradeSlips_2025</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">CURRENT CONSTITUTION</div>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Current Edition of Organization Constitution <span class="required">*</span></label>
+                        <div class="upload-box upload-box-file" id="constitutionBox" onclick="document.getElementById('constitutionInput').click()">
+                            <div id="constitutionPlaceholder" class="upload-placeholder">
+                                <div class="upload-icon">&#128196;</div>
+                                <div id="constitutionFileName">Click to upload constitution (PDF)</div>
+                                <div class="upload-hint">PDF file only (max 10MB)</div>
+                            </div>
+                        </div>
+                        <input type="file" id="constitutionInput" accept=".pdf" class="hidden" onchange="handleFileUpload('constitutionInput','constitutionFileName','constitutionBox')">
+                        <div class="field-hint">File format: <strong>ORG ACRONYM_Constitution</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strat-section">
+                <div class="guidelines-section-title">CURRENT ORGANIZATION LOGO</div>
+                <div class="form">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Latest Version of Organization Logo / Seal <span class="required">*</span></label>
+                        <div class="upload-box" id="orgLogoBox" onclick="document.getElementById('orgLogoInput').click()">
+                            <img id="orgLogoPreview" src="" alt="" class="upload-preview hidden" style="max-height:160px;">
+                            <div id="orgLogoPlaceholder" class="upload-placeholder">
+                                <div class="upload-icon">&#128444;</div>
+                                <div>Click to upload organization logo</div>
+                                <div class="upload-hint">PNG, JPG accepted (max 5MB)</div>
+                            </div>
+                        </div>
+                        <input type="file" id="orgLogoInput" accept="image/*" class="hidden" onchange="handleImageUpload('orgLogoInput','orgLogoPreview','orgLogoPlaceholder')">
+                        <div class="field-hint">File format: <strong>ORG ACRONYM_Logo</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('moderatorProfile')">← Back</button></div>
+                <div class="nav-right">
+                    <button class="btn btn-secondary" onclick="saveFormData('gradeAndDocs')" style="margin-right:10px;">&#128190; Save Progress</button>
+                    <button class="btn btn-primary" onclick="submitAllForms()">&#9989; Submit All Requirements</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
