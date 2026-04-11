@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Student Activities and Leadership Development - Xavier University</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <img src="xu_logo.png" alt="Xavier University Logo" class="logo-img">
+                <span class="logo-text">Student Activities<br>and Leadership Development</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ADMIN LOGIN -->
+    <div id="adminLogin" class="page">
+        <div class="container-sm">
+            <div class="box" style="text-align:center;">
+                <div class="form-badge" style="margin-bottom:8px;">Admin</div>
+                <h1>Admin Login</h1>
+                <p>OSA-SACDEV staff access only</p>
+            </div>
+            <div class="form">
+                <div class="form-group">
+                    <label class="form-label">Admin Email <span class="required">*</span></label>
+                    <input type="email" id="adminEmail" class="form-input" placeholder="Enter admin email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password <span class="required">*</span></label>
+                    <input type="password" id="adminPassword" class="form-input" placeholder="Enter admin password">
+                </div>
+            </div>
+            <div id="adminLoginError" class="error-banner hidden"></div>
+            <div class="nav">
+                <div class="nav-right"><button class="btn btn-primary" onclick="handleAdminLogin()">Login &#8594;</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="adminDashboard" class="page hidden">
+        <div class="container-md">
+            <div class="box" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <div class="form-badge" style="margin-bottom:6px;">Admin Panel</div>
+                    <h1>Admin Dashboard</h1>
+                    <p>OSA-SACDEV Student Organization Management</p>
+                </div>
+                <button class="btn btn-secondary" onclick="handleAdminLogout()">Log Out</button>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="admin-stats-row">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-number" id="statTotal">0</div>
+                    <div class="admin-stat-label">Total Submissions</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-number" id="statComplete" style="color:#16a34a;">0</div>
+                    <div class="admin-stat-label">Complete</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-number" id="statPending" style="color:#d97706;">0</div>
+                    <div class="admin-stat-label">Pending</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-number" id="statCouncils">9</div>
+                    <div class="admin-stat-label">Councils</div>
+                </div>
+            </div>
+
+            <!-- Submissions Table -->
+            <div class="strat-section">
+                <div class="guidelines-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+                    <span>Registered Organizations</span>
+                    <input type="text" id="adminSearch" class="form-input" placeholder="&#128269; Search by org or email..." style="max-width:260px;font-size:13px;" oninput="filterAdminTable()">
+                </div>
+                <div class="strat-table-wrapper" style="margin-top:16px;">
+                    <table class="strat-table" id="adminSubmissionsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Organization</th>
+                                <th>Council</th>
+                                <th>President</th>
+                                <th>Email</th>
+                                <th>Cluster</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminSubmissionsBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="adminNoData" class="admin-no-data hidden">No submissions found.</div>
+            </div>
+
+            <!-- Council Summary -->
+            <div class="strat-section">
+                <div class="guidelines-section-title">Council Overview</div>
+                <div class="admin-council-grid" id="adminCouncilGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

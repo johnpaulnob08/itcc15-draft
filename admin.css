@@ -1,0 +1,105 @@
+/* Admin-specific styles for SACDEV Admin Panel */
+
+/* Admin button in navbar */
+.btn-admin-link {
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+.btn-admin-link:hover {
+    background: #f8fafc;
+    border-color: #1f3a70;
+    color: #1f3a70;
+}
+
+/* ══════════════════════════════════════════════════
+   ADMIN DASHBOARD
+══════════════════════════════════════════════════ */
+.admin-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+@media (max-width: 640px) {
+    .admin-stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+.admin-stat-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.admin-stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #1f3a70;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.admin-stat-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.admin-council-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+.admin-council-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+.admin-council-card-key {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1f3a70;
+    margin-bottom: 4px;
+}
+.admin-council-card-name {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.admin-council-card-count {
+    font-size: 12px;
+    color: #475569;
+    font-weight: 600;
+}
+.admin-no-data {
+    text-align: center;
+    color: #94a3b8;
+    padding: 32px;
+    font-size: 14px;
+}
+.admin-status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.admin-status-badge.complete {
+    background: #dcfce7;
+    color: #16a34a;
+}
+.admin-status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
