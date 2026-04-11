@@ -140,6 +140,21 @@ function goToPage(pageName) {
 
     document.querySelectorAll('[id^="progress-circle-"]').forEach(el => el.remove());
 
+    // Show/hide global form sidebar
+    const formPages = ['orgInfo','strategicPlan','presidentProfile','orgOfficers','orgMembers','moderatorProfile','gradeAndDocs','submissionSummary'];
+    const sidenav = document.getElementById('formSidenav');
+    if (formPages.includes(pageName)) {
+        sidenav.classList.remove('hidden');
+        document.body.classList.add('has-form-sidenav');
+        // Highlight active item
+        document.querySelectorAll('.form-sidenav-item').forEach(el => el.classList.remove('active'));
+        const activeItem = document.getElementById('snav-' + pageName);
+        if (activeItem) activeItem.classList.add('active');
+    } else {
+        sidenav.classList.add('hidden');
+        document.body.classList.remove('has-form-sidenav');
+    }
+
     if (pageName === 'dashboard')     initDashboard();
     if (pageName === 'councilDetail') initCouncilDetail();
     if (pageName === 'auth')          initAuth();
@@ -152,6 +167,18 @@ function goToPage(pageName) {
     if (pageName === 'orgMembers')       { initOrgMembers(); createProgressCircle('orgMembers'); updateMembersProgress(); }
     if (pageName === 'moderatorProfile') { initModeratorProfile(); createProgressCircle('moderatorProfile'); updateModeratorProgress(); }
     if (pageName === 'gradeAndDocs')     { initGradeAndDocs(); createProgressCircle('gradeAndDocs'); updateGradeDocsProgress(); }
+}
+
+// Navigate from sidebar — saves current form data first
+function snavGo(page) {
+    const currentPage = [...document.querySelectorAll('.page')].find(p => !p.classList.contains('hidden'));
+    if (currentPage) {
+        const id = currentPage.id;
+        if (['orgInfo','strategicPlan','presidentProfile','orgOfficers','orgMembers','moderatorProfile','gradeAndDocs'].includes(id)) {
+            saveFormData(id);
+        }
+    }
+    goToPage(page);
 }
 
 // HELPERS
@@ -708,7 +735,7 @@ function showSaveToast(msg) {
         toast.className = 'save-toast';
         document.body.appendChild(toast);
     }
-    toast.textContent = '✓ ' + msg;
+    toast.textContent = '+ ' + msg;
     toast.classList.add('show');
     clearTimeout(toast._timer);
     toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
@@ -808,7 +835,7 @@ function handleFileUpload(inputId, fileNameElId, boxId) {
     const box = document.getElementById(boxId);
     if (!input || !input.files || !input.files[0]) return;
     const file = input.files[0];
-    if (nameEl) nameEl.textContent = '✓ ' + file.name;
+    if (nameEl) nameEl.textContent = '+ ' + file.name;
     if (box) box.classList.add('has-file');
     const pageEl = input.closest('.page');
     if (pageEl) triggerProgressUpdate(pageEl.id);
@@ -1094,3 +1121,209 @@ function submitAllForms() {
     }
     alert('All requirements have been submitted successfully!\n\nPlease ensure you have completed all forms and uploaded all required documents. OSA-SACDEV will evaluate your re-registration requirements before granting recognition.');
 }
+
+// ═══════════════════════════════════════════════════
+// SUBMISSION SUMMARY
+// ═══════════════════════════════════════════════════
+
+function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    return false;
+}
+
+function goToSummary() {
+    saveFormData('gradeAndDocs');
+    buildSummary();
+    goToPage('submissionSummary');
+}
+
+function buildSummary() {
+    const container = document.getElementById('summaryContent');
+    const warning   = document.getElementById('summaryWarning');
+    const submitBtn = document.getElementById('finalSubmitBtn');
+    const missingFields = [];
+
+    container.innerHTML = '';
+
+    // ── Helper ──────────────────────────────────────
+    function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+    function imgFilled(previewId) {
+        const el = document.getElementById(previewId);
+        return el && !el.classList.contains('hidden') && el.src && el.src !== window.location.href;
+    }
+    function fileFilled(boxId) {
+        const el = document.getElementById(boxId);
+        return el && el.classList.contains('has-file');
+    }
+
+    function buildSection(title, badge, fields, sectionId) {
+        const section = document.createElement('div');
+        section.className = 'summary-section';
+        if (sectionId) section.id = sectionId;
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'summary-section-title';
+        titleEl.innerHTML = title + (badge ? ` <span class="summary-badge">${badge}</span>` : '');
+        section.appendChild(titleEl);
+
+        const body = document.createElement('div');
+        body.className = 'summary-section-body';
+
+        fields.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'summary-field' + (f.fullWidth ? ' summary-full-width' : '');
+            const lbl = document.createElement('div');
+            lbl.className = 'summary-field-label';
+            lbl.textContent = f.label;
+            const valDiv = document.createElement('div');
+            if (f.value) {
+                valDiv.className = 'summary-field-value filled';
+                valDiv.textContent = f.value;
+            } else if (f.required) {
+                valDiv.className = 'summary-field-value missing';
+                valDiv.innerHTML = '! Not filled in';
+                missingFields.push(f.label);
+            } else {
+                valDiv.className = 'summary-field-value';
+                valDiv.textContent = '—';
+                valDiv.style.color = '#94a3b8';
+            }
+            div.appendChild(lbl);
+            div.appendChild(valDiv);
+            body.appendChild(div);
+        });
+
+        section.appendChild(body);
+        return section;
+    }
+
+    // ── Account Info ────────────────────────────────
+    container.appendChild(buildSection('ACCOUNT', null, [
+        { label: 'XU Email', value: currentState.userEmail, required: true },
+        { label: 'Organization', value: currentState.selectedOrg, required: true },
+        { label: 'Council', value: currentState.selectedCouncil ? (currentState.selectedCouncil + ' – ' + (councils[currentState.selectedCouncil]?.name || '')) : '', required: true },
+    ], 'summary-account'));
+
+    // ── Org Info ────────────────────────────────────
+    container.appendChild(buildSection('ORGANIZATION INFORMATION', null, [
+        { label: 'Org Cluster', value: val('infoCluster'), required: true },
+        { label: "President's Name", value: val('infoPresidentName'), required: true },
+        { label: "President's Mobile", value: val('infoPresidentMobile'), required: true },
+        { label: "President's Email", value: val('infoPresidentEmail'), required: true },
+        { label: 'Moderator Nominee', value: val('infoModeratorName'), required: true },
+    ], 'summary-orginfo'));
+
+    // ── Form B-1 ─────────────────────────────────
+    container.appendChild(buildSection('STRATEGIC PLAN', 'Form B-1', [
+        { label: 'Org Acronym', value: val('stratAcronym'), required: true },
+        { label: 'Full Org Name', value: val('stratOrgFullName'), required: true },
+        { label: 'Mission Statement', value: val('stratMission') ? '+ Filled' : '', required: true },
+        { label: 'Vision Statement', value: val('stratVision') ? '+ Filled' : '', required: true },
+    ], 'summary-b1'));
+
+    // ── Form B-2 ─────────────────────────────────
+    container.appendChild(buildSection("PRESIDENT'S PROFILE", 'Form B-2', [
+        { label: 'Full Name', value: val('presFullName'), required: true },
+        { label: 'Course and Year', value: val('presCourseYear'), required: true },
+        { label: 'Mobile Number', value: val('presMobile'), required: true },
+        { label: 'Email', value: val('presEmail'), required: true },
+        { label: 'E-Signature', value: imgFilled('presSignaturePreview') ? '+ Uploaded' : '', required: true },
+        { label: 'Photo ID', value: imgFilled('presPhotoPreview') ? '+ Uploaded' : '', required: false },
+    ], 'summary-b2'));
+
+    // ── Form B-3 ─────────────────────────────────
+    const officerRows = document.getElementById('officersTableBody')?.querySelectorAll('tr') || [];
+    let officerCount = 0;
+    officerRows.forEach(tr => {
+        const inputs = tr.querySelectorAll('input');
+        if (inputs[0]?.value.trim() && inputs[1]?.value.trim()) officerCount++;
+    });
+    container.appendChild(buildSection('ORGANIZATION OFFICERS', 'Form B-3', [
+        { label: 'Organization Type', value: val('officersOrgType'), required: true },
+        { label: 'Cluster', value: val('officersCluster'), required: false },
+        { label: 'Officers Listed', value: officerCount > 0 ? `${officerCount} officer(s)` : '', required: true },
+    ], 'summary-b3'));
+
+    // ── Form B-4 ─────────────────────────────────
+    const memberRows = document.getElementById('membersTableBody')?.querySelectorAll('tr') || [];
+    let memberCount = 0;
+    memberRows.forEach(tr => {
+        const inputs = tr.querySelectorAll('input');
+        if (inputs[0]?.value.trim()) memberCount++;
+    });
+    container.appendChild(buildSection('ORGANIZATION MEMBERS', 'Form B-4', [
+        { label: 'Members Listed', value: memberCount > 0 ? `${memberCount} member(s)` : 'None / Not applicable', required: false },
+    ], 'summary-b4'));
+
+    // ── Form B-5.1 ───────────────────────────────
+    container.appendChild(buildSection("MODERATOR'S PROFILE", 'Form B-5.1', [
+        { label: 'Full Name', value: val('modFullName'), required: true },
+        { label: 'Nominating Org', value: val('modNominatingOrg'), required: true },
+        { label: 'Designation', value: val('modDesignation'), required: true },
+        { label: 'Department', value: val('modDepartment'), required: true },
+        { label: 'Mobile Number', value: val('modMobile'), required: true },
+        { label: 'Email', value: val('modEmail'), required: true },
+        { label: 'E-Signature', value: imgFilled('modSignaturePreview') ? '+ Uploaded' : '', required: true },
+    ], 'summary-b5'));
+
+    // ── Form B-6 & Documents ─────────────────────
+    container.appendChild(buildSection('GRADE SLIPS, CONSTITUTION & LOGO', 'Form B-6 & Docs', [
+        { label: 'Grade Slips (Form B-6)', value: fileFilled('gradeSlipsBox') ? '+ Uploaded' : '', required: true },
+        { label: 'Organization Constitution', value: fileFilled('constitutionBox') ? '+ Uploaded' : '', required: true },
+        { label: 'Organization Logo', value: imgFilled('orgLogoPreview') ? '+ Uploaded' : '', required: true },
+    ], 'summary-b6'));
+
+    // ── Warning banner ───────────────────────────
+    if (missingFields.length > 0) {
+        warning.classList.remove('hidden');
+        document.getElementById('summaryWarningText').innerHTML =
+            `<strong>${missingFields.length} required field(s) are incomplete:</strong> ${missingFields.join(', ')}. Please go back and fill in all required fields before submitting.`;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+    } else {
+        warning.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+        submitBtn.style.cursor = '';
+    }
+}
+
+// Override submitAllForms to use summary page gate
+function submitAllForms() {
+    const submitBtn = document.getElementById('finalSubmitBtn');
+    if (submitBtn && submitBtn.disabled) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+    }
+    saveFormData('gradeAndDocs');
+
+    // Store submission in admin records
+    const submission = {
+        id: Date.now(),
+        org: currentState.selectedOrg || '—',
+        council: currentState.selectedCouncil || '—',
+        president: document.getElementById('presFullName')?.value?.trim() || currentState.presidentName || '—',
+        email: currentState.userEmail || '—',
+        cluster: document.getElementById('infoCluster')?.value || currentState.orgCluster || '—',
+        submittedAt: new Date().toLocaleString('en-PH'),
+        complete: true
+    };
+
+    try {
+        const existing = JSON.parse(localStorage.getItem('sacdev_submissions') || '[]');
+        existing.push(submission);
+        localStorage.setItem('sacdev_submissions', JSON.stringify(existing));
+    } catch(e) {}
+
+    alert('✅ All requirements have been submitted successfully!\n\nPlease ensure you have completed all forms and uploaded all required documents. OSA-SACDEV will evaluate your re-registration requirements before granting recognition.');
+    goToPage('dashboard');
+}
+
+

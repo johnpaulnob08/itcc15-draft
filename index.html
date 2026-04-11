@@ -13,9 +13,11 @@
                 <img src="xu_logo.png" alt="Xavier University Logo" class="logo-img">
                 <span class="logo-text">Student Activities<br>and Leadership Development</span>
             </div>
-            <div class="navbar-user hidden" id="navbarUser">
-                <span class="navbar-email" id="navbarEmail"></span>
-                <button class="btn-logout" onclick="handleLogout()">Log out</button>
+            <div class="navbar-right">
+                <div class="navbar-user hidden" id="navbarUser">
+                    <span class="navbar-email" id="navbarEmail"></span>
+                    <button class="btn-logout" onclick="handleLogout()">Log out</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -517,7 +519,7 @@
                     <div class="upload-box" id="presPhotoBox" onclick="document.getElementById('presPhotoInput').click()">
                         <img id="presPhotoPreview" src="" alt="" class="upload-preview hidden">
                         <div id="presPhotoPlaceholder" class="upload-placeholder">
-                            <div class="upload-icon">&#128247;</div>
+                            
                             <div>Click to upload photo ID</div>
                             <div class="upload-hint">JPG, PNG accepted</div>
                         </div>
@@ -763,7 +765,7 @@
                         <div class="upload-box upload-box-sig" id="presSignatureBox" onclick="document.getElementById('presSignatureInput').click()">
                             <img id="presSignaturePreview" src="" alt="" class="upload-preview hidden">
                             <div id="presSignaturePlaceholder" class="upload-placeholder">
-                                <div class="upload-icon">&#9998;</div>
+                                
                                 <div>Click to upload e-signature image</div>
                                 <div class="upload-hint">JPG, PNG accepted</div>
                             </div>
@@ -777,7 +779,6 @@
             <div class="nav">
                 <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('strategicPlan')">← Back</button></div>
                 <div class="nav-right">
-                    <button class="btn btn-secondary" onclick="saveFormData('presidentProfile')" style="margin-right:10px;">&#128190; Save Progress</button>
                     <button class="btn btn-primary" onclick="submitAndNext('presidentProfile','orgOfficers')">Save &amp; Next &#8594;</button>
                 </div>
             </div>
@@ -851,7 +852,6 @@
             <div class="nav">
                 <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('presidentProfile')">← Back</button></div>
                 <div class="nav-right">
-                    <button class="btn btn-secondary" onclick="saveFormData('orgOfficers')" style="margin-right:10px;">&#128190; Save Progress</button>
                     <button class="btn btn-primary" onclick="submitAndNext('orgOfficers','orgMembers')">Save &amp; Next &#8594;</button>
                 </div>
             </div>
@@ -924,7 +924,6 @@
             <div class="nav">
                 <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgOfficers')">← Back</button></div>
                 <div class="nav-right">
-                    <button class="btn btn-secondary" onclick="saveFormData('orgMembers')" style="margin-right:10px;">&#128190; Save Progress</button>
                     <button class="btn btn-primary" onclick="submitAndNext('orgMembers','moderatorProfile')">Save &amp; Next &#8594;</button>
                 </div>
             </div>
@@ -942,7 +941,7 @@
             </div>
 
             <div class="guidelines-section" style="background:#fffbeb;border-left:4px solid #d4af37;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
-                <p class="guidelines-body" style="font-weight:600;color:#1f3a70;margin-bottom:8px;">&#9888; Instruction for the Moderator-Nominee:</p>
+                <p class="guidelines-body" style="font-weight:600;color:#1f3a70;margin-bottom:8px;">Instruction for the Moderator-Nominee:</p>
                 <p class="guidelines-body">Every start of the academic year, student organizations are required to accomplish re-registration requirements which include moderator nomination forms and profile forms. Please be advised that a student organization has chosen you as their nominee. Please accomplish this form accurately and return it to your nominating organization for submission.</p>
             </div>
 
@@ -953,7 +952,7 @@
                     <div class="upload-box" id="modPhotoBox" onclick="document.getElementById('modPhotoInput').click()">
                         <img id="modPhotoPreview" src="" alt="" class="upload-preview hidden">
                         <div id="modPhotoPlaceholder" class="upload-placeholder">
-                            <div class="upload-icon">&#128247;</div>
+                            
                             <div>Click to upload photo ID</div>
                             <div class="upload-hint">JPG, PNG accepted</div>
                         </div>
@@ -1128,7 +1127,7 @@
                         <div class="upload-box upload-box-sig" id="modSignatureBox" onclick="document.getElementById('modSignatureInput').click()">
                             <img id="modSignaturePreview" src="" alt="" class="upload-preview hidden">
                             <div id="modSignaturePlaceholder" class="upload-placeholder">
-                                <div class="upload-icon">&#9998;</div>
+                                
                                 <div>Click to upload e-signature image</div>
                                 <div class="upload-hint">JPG, PNG accepted</div>
                             </div>
@@ -1142,7 +1141,6 @@
             <div class="nav">
                 <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('orgMembers')">← Back</button></div>
                 <div class="nav-right">
-                    <button class="btn btn-secondary" onclick="saveFormData('moderatorProfile')" style="margin-right:10px;">&#128190; Save Progress</button>
                     <button class="btn btn-primary" onclick="submitAndNext('moderatorProfile','gradeAndDocs')">Save &amp; Next &#8594;</button>
                 </div>
             </div>
@@ -1161,7 +1159,7 @@
 
             <!-- Grade Slips instructions -->
             <div class="guidelines-section" style="background:#f0f4ff;border-left:4px solid #1f3a70;padding:16px 20px;border-radius:8px;margin-bottom:24px;">
-                <div class="guidelines-section-title" style="margin-bottom:8px;">&#128221; Instructions: Grade Slips (Form B-6)</div>
+                <div class="guidelines-section-title" style="margin-bottom:8px;">Instructions: Grade Slips (Form B-6)</div>
                 <ol class="guidelines-ol">
                     <li>Gather screenshots of the <strong>2nd semester grades</strong> of <strong>ALL OFFICERS</strong> as listed on Form B-3.</li>
                     <li>Compile all screenshots in <strong>one Word or PDF file</strong> (short/letter size).</li>
@@ -1177,7 +1175,7 @@
                         <label class="form-label">Compiled 2nd Semester Grade Slips of All Officers <span class="required">*</span></label>
                         <div class="upload-box upload-box-file" id="gradeSlipsBox" onclick="document.getElementById('gradeSlipsInput').click()">
                             <div id="gradeSlipsPlaceholder" class="upload-placeholder">
-                                <div class="upload-icon">&#128196;</div>
+                                
                                 <div id="gradeSlipsFileName">Click to upload compiled grade slips</div>
                                 <div class="upload-hint">PDF or Word document accepted (max 10MB)</div>
                             </div>
@@ -1195,7 +1193,7 @@
                         <label class="form-label">Current Edition of Organization Constitution <span class="required">*</span></label>
                         <div class="upload-box upload-box-file" id="constitutionBox" onclick="document.getElementById('constitutionInput').click()">
                             <div id="constitutionPlaceholder" class="upload-placeholder">
-                                <div class="upload-icon">&#128196;</div>
+                                
                                 <div id="constitutionFileName">Click to upload constitution (PDF)</div>
                                 <div class="upload-hint">PDF file only (max 10MB)</div>
                             </div>
@@ -1214,7 +1212,7 @@
                         <div class="upload-box" id="orgLogoBox" onclick="document.getElementById('orgLogoInput').click()">
                             <img id="orgLogoPreview" src="" alt="" class="upload-preview hidden" style="max-height:160px;">
                             <div id="orgLogoPlaceholder" class="upload-placeholder">
-                                <div class="upload-icon">&#128444;</div>
+                                
                                 <div>Click to upload organization logo</div>
                                 <div class="upload-hint">PNG, JPG accepted (max 5MB)</div>
                             </div>
@@ -1228,10 +1226,113 @@
             <div class="nav">
                 <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('moderatorProfile')">← Back</button></div>
                 <div class="nav-right">
-                    <button class="btn btn-secondary" onclick="saveFormData('gradeAndDocs')" style="margin-right:10px;">&#128190; Save Progress</button>
-                    <button class="btn btn-primary" onclick="submitAllForms()">&#9989; Submit All Requirements</button>
+                    <button class="btn btn-primary" onclick="goToSummary()">Review &amp; Submit &#8594;</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- SUBMISSION SUMMARY -->
+    <div id="submissionSummary" class="page hidden">
+        <div class="container-md">
+            <button class="btn-back" onclick="goToPage('gradeAndDocs')">&#8592; Back</button>
+            <div class="box">
+                <h1>Submission Summary</h1>
+                <p>Please review all your information before final submission. All required fields (<span class="required">*</span>) must be filled in.</p>
+            </div>
+
+            <!-- Summary layout: sidebar nav + main content -->
+            <div class="summary-layout">
+
+                <!-- Left sidebar navigation -->
+                <nav class="summary-sidenav" id="summarySidenav">
+                    <div class="summary-sidenav-title">Forms</div>
+                    <a class="summary-sidenav-link" href="#summary-account" onclick="scrollToSection('summary-account')">Account</a>
+                    <a class="summary-sidenav-link" href="#summary-orginfo" onclick="scrollToSection('summary-orginfo')">Organization Info</a>
+                    <a class="summary-sidenav-link" href="#summary-b1" onclick="scrollToSection('summary-b1')">
+                        <span class="summary-sidenav-badge">B-1</span> Strategic Plan
+                    </a>
+                    <a class="summary-sidenav-link" href="#summary-b2" onclick="scrollToSection('summary-b2')">
+                        <span class="summary-sidenav-badge">B-2</span> President's Profile
+                    </a>
+                    <a class="summary-sidenav-link" href="#summary-b3" onclick="scrollToSection('summary-b3')">
+                        <span class="summary-sidenav-badge">B-3</span> Officers
+                    </a>
+                    <a class="summary-sidenav-link" href="#summary-b4" onclick="scrollToSection('summary-b4')">
+                        <span class="summary-sidenav-badge">B-4</span> Members
+                    </a>
+                    <a class="summary-sidenav-link" href="#summary-b5" onclick="scrollToSection('summary-b5')">
+                        <span class="summary-sidenav-badge">B-5.1</span> Moderator
+                    </a>
+                    <a class="summary-sidenav-link" href="#summary-b6" onclick="scrollToSection('summary-b6')">
+                        <span class="summary-sidenav-badge">B-6</span> Documents
+                    </a>
+                    <div class="summary-sidenav-divider"></div>
+                    <div class="summary-sidenav-subtitle">Go to Form</div>
+                    <button class="summary-sidenav-goto" onclick="goToPage('orgInfo')">&#8594; Org Info</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('strategicPlan')">&#8594; Strategic Plan</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('presidentProfile')">&#8594; President Profile</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('orgOfficers')">&#8594; Officers</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('orgMembers')">&#8594; Members</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('moderatorProfile')">&#8594; Moderator</button>
+                    <button class="summary-sidenav-goto" onclick="goToPage('gradeAndDocs')">&#8594; Documents</button>
+                </nav>
+
+                <!-- Main summary content -->
+                <div class="summary-main">
+                    <div id="summaryContent"></div>
+                    <div id="summaryWarning" class="summary-warning hidden">
+                        <span class="summary-warning-icon">!</span>
+                        <span id="summaryWarningText"></span>
+                    </div>
+                    <div class="nav" style="margin-top:32px;">
+                        <div class="nav-left"><button class="btn btn-secondary" onclick="goToPage('gradeAndDocs')">&#8592; Back</button></div>
+                        <div class="nav-right"><button class="btn btn-primary" id="finalSubmitBtn" onclick="submitAllForms()">Submit All Requirements &#8594;</button></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL FORM SIDE NAVIGATION (shown on all student form pages) -->
+    <div id="formSidenav" class="form-sidenav hidden">
+        <div class="form-sidenav-inner">
+            <div class="form-sidenav-header">Registration Forms</div>
+
+            <a class="form-sidenav-item" id="snav-orgInfo" onclick="snavGo('orgInfo')">
+                <span class="form-sidenav-step">0</span>
+                <span class="form-sidenav-label">Org Information</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-strategicPlan" onclick="snavGo('strategicPlan')">
+                <span class="form-sidenav-step">B-1</span>
+                <span class="form-sidenav-label">Strategic Plan</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-presidentProfile" onclick="snavGo('presidentProfile')">
+                <span class="form-sidenav-step">B-2</span>
+                <span class="form-sidenav-label">President's Profile</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-orgOfficers" onclick="snavGo('orgOfficers')">
+                <span class="form-sidenav-step">B-3</span>
+                <span class="form-sidenav-label">Officers</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-orgMembers" onclick="snavGo('orgMembers')">
+                <span class="form-sidenav-step">B-4</span>
+                <span class="form-sidenav-label">Members</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-moderatorProfile" onclick="snavGo('moderatorProfile')">
+                <span class="form-sidenav-step">B-5.1</span>
+                <span class="form-sidenav-label">Moderator</span>
+            </a>
+            <a class="form-sidenav-item" id="snav-gradeAndDocs" onclick="snavGo('gradeAndDocs')">
+                <span class="form-sidenav-step">B-6</span>
+                <span class="form-sidenav-label">Documents</span>
+            </a>
+            <div class="form-sidenav-divider"></div>
+            <a class="form-sidenav-item form-sidenav-review" id="snav-submissionSummary" onclick="goToSummary()">
+                <span class="form-sidenav-step form-sidenav-step-review">&#8594;</span>
+                <span class="form-sidenav-label">Review &amp; Submit</span>
+            </a>
         </div>
     </div>
 
